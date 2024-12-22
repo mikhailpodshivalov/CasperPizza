@@ -8,7 +8,7 @@
                 class="bg-white rounded-lg shadow-lg p-4 flex justify-between items-center"
             >
                 <div>
-                    <h2 class="text-lg font-bold">Пицца {{ item.pizza_id }}</h2>
+                    <h2 class="text-lg font-bold">{{ item.name }}</h2>
                     <p>Размер: {{ item.size }}</p>
                     <p>Цена: {{ item.price }} RSD</p>
                 </div>

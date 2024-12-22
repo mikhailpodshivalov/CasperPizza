@@ -37,19 +37,24 @@
                     <p class="text-gray-500 mb-4">{{ pizza.description }}</p>
 
                     <div class="mb-4">
-                        <label v-for="(size, index) in pizza.sizes" :key="size.size" class="inline-flex items-center space-x-2">
+                        <label
+                            v-for="(size, index) in pizza.sizes"
+                            :key="size.size"
+                            class="inline-flex items-center space-x-2"
+                        >
                             <input
                                 type="radio"
                                 :name="'size-' + pizza.id"
                                 :value="index"
                                 v-model="selectedSize[pizza.id]"
+                                @change="toggleSelection(pizza.id, index)"
                                 class="hidden"
                             />
                             <div
                                 :class="{
-            'bg-blue-200 text-blue-800': selectedSize[pizza.id] === index,
-            'bg-gray-100 text-gray-700': selectedSize[pizza.id] !== index
-          }"
+                                    'bg-blue-200 text-blue-800': selectedSize[pizza.id] === index,
+                                    'bg-gray-100 text-gray-700': selectedSize[pizza.id] !== index
+                                }"
                                 class="px-4 py-2 rounded-lg cursor-pointer transition"
                             >
                                 {{ size.size }} - {{ size.price }} RSD
@@ -72,7 +77,7 @@
             <div class="container mx-auto flex justify-between items-center px-6">
                 <div class="flex items-center space-x-6">
                     <img src="https://via.placeholder.com/100" alt="Footer Logo" class="w-20 h-20">
-                    <p class="text-lg">Pizza Delivery © 2024</p>
+                    <p class="text-lg">Casper pizza © 2024</p>
                 </div>
             </div>
         </footer>
@@ -87,20 +92,55 @@ export default {
     data() {
         return {
             selectedSize: {}, // Tracks selected size for each pizza
+            cart: [], // Локальная корзина
         };
     },
+    computed: {
+        cartCount() {
+            // Количество товаров в корзине
+            return this.cart.length;
+        },
+    },
     methods: {
+        loadCart() {
+            // Загружаем корзину из localStorage, если она есть
+            const savedCart = localStorage.getItem('cart');
+            if (savedCart) {
+                this.cart = JSON.parse(savedCart);
+            }
+        },
+        saveCart() {
+            // Сохраняем корзину в localStorage
+            localStorage.setItem('cart', JSON.stringify(this.cart));
+        },
+        toggleSelection(pizzaId, index) {
+            // Снимаем выделение, если тот же размер выбран повторно
+            if (this.selectedSize[pizzaId] === index) {
+                this.$set(this.selectedSize, pizzaId, null);
+            }
+        },
         addToCart(pizzaId, sizeIndex) {
             const pizza = this.pizzas.find((p) => p.id === pizzaId);
             const selectedSize = pizza.sizes[sizeIndex];
             if (selectedSize) {
-                this.$inertia.post('/cart/add', {
-                    pizzaId,
+                // Добавляем пиццу в локальную корзину
+                this.cart.push({
+                    pizza_id: pizza.id,
+                    name: pizza.name,
+                    image: pizza.image,
                     size: selectedSize.size,
                     price: selectedSize.price,
                 });
+                this.saveCart(); // Сохраняем обновления
+                // Сбрасываем выделение после добавления
+                this.$set(this.selectedSize, pizzaId, null);
+            } else {
+                alert('Выберите размер пиццы!');
             }
         },
+    },
+    mounted() {
+        this.loadCart(); // Загружаем корзину при загрузке страницы
     },
 };
 </script>

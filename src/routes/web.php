@@ -50,6 +50,7 @@ Route::get('/', function () {
 Route::post('/cart/add/{id}', [CartController::class, 'add']);
 
 Route::post('/cart/add', [CartController::class, 'add']);
+Route::post('/cart/remove', [CartController::class, 'remove']);
 Route::get('/cart', [CartController::class, 'index']);
 Route::post('/cart/checkout', [CartController::class, 'checkout']);
 
