@@ -87,12 +87,19 @@
 <script>
 export default {
     props: {
-        pizzas: Array,
+        pizzas: {
+            type: Array,
+            required: true,
+            default: () => [],
+        },
     },
     data() {
         return {
-            selectedSize: {}, // Tracks selected size for each pizza
-            cart: [], // Локальная корзина
+            selectedSize: this.pizzas.reduce((acc, pizza) => {
+                acc[pizza.id] = null;
+                return acc;
+            }, {}),
+            cart: [],
         };
     },
     computed: {
@@ -115,29 +122,33 @@ export default {
         },
         toggleSelection(pizzaId, index) {
             // Снимаем выделение, если тот же размер выбран повторно
-            if (this.selectedSize[pizzaId] === index) {
-                this.$set(this.selectedSize, pizzaId, null);
-            }
+            // if (this.selectedSize[pizzaId] === index) {
+            //     this.$set(this.selectedSize, pizzaId, null);
+            // }
         },
         addToCart(pizzaId, sizeIndex) {
             const pizza = this.pizzas.find((p) => p.id === pizzaId);
-            const selectedSize = pizza.sizes[sizeIndex];
-            if (selectedSize) {
-                // Добавляем пиццу в локальную корзину
-                this.cart.push({
-                    pizza_id: pizza.id,
-                    name: pizza.name,
-                    image: pizza.image,
-                    size: selectedSize.size,
-                    price: selectedSize.price,
-                });
-                this.saveCart(); // Сохраняем обновления
-                // Сбрасываем выделение после добавления
-                this.$set(this.selectedSize, pizzaId, null);
-            } else {
-                alert('Выберите размер пиццы!');
+            if (!pizza || !Array.isArray(pizza.sizes)) {
+                alert('Ошибка: некорректные данные пиццы.');
+                return;
             }
-        },
+            const selectedSize = pizza.sizes[sizeIndex];
+            if (!selectedSize) {
+                alert('Выберите корректный размер пиццы!');
+                return;
+            }
+            // Добавляем пиццу в локальную корзину
+            this.cart.push({
+                pizza_id: pizza.id,
+                name: pizza.name,
+                image: pizza.image,
+                size: selectedSize.size,
+                price: selectedSize.price,
+            });
+            this.saveCart(); // Сохраняем обновления
+            // Сбрасываем выделение после добавления
+            // this.$set(this.selectedSize, pizzaId, null);
+        }
     },
     mounted() {
         this.loadCart(); // Загружаем корзину при загрузке страницы

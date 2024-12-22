@@ -95,6 +95,8 @@ export default {
             cart: [], // Локальная корзина
             phone: '',
             address: '',
+            addressError: null, // Добавлено свойство
+            phoneError: null,   // Если также используется phoneError
         };
     },
     computed: {
