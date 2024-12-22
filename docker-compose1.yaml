@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  app:
+    container_name: app
+    build:
+      context: ./
+      dockerfile: ./build/php/Dockerfile
+    environment:
+      PHP_IDE_CONFIG: "serverName=CasperPizza"
+    volumes:
+      - ./src:/var/www
+    depends_on:
+      - db
+      - redis
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./
+      dockerfile: ./build/nginx/Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ..:/var/www:rw
+      - ./storage:/var/www/storage
+    depends_on:
+      - app
+
+  db:
+    image: mysql:8.0
+    volumes:
+      - ./db:/var/lib/mysql
+    restart: always
+    ports:
+      - "3308:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: casper
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+
+  redis:
+    image: "redis:alpine"
+    hostname: redis
+    ports:
+      - "6385:6379"
+
+volumes:
+  db_data:
