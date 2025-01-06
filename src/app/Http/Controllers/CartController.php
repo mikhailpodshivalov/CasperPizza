@@ -38,7 +38,7 @@ class CartController extends Controller
         $index = $request->input('index');
         $cart = session()->get('cart', []);
         if (!isset($cart[$index])) {
-            return back()->withErrors(['message' => 'Элемент не найден']);
+            return back()->withErrors(['message' => 'Element nije pronađen']);
         }
 
         unset($cart[$index]);

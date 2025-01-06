@@ -11,7 +11,7 @@ services:
       - ./src/:/var/www/html
       - ./build/php/xdebug.ini:/usr/local/etc/php/conf.d/xdebug.ini
     ports:
-      - "9003:9003"
+      - "9004:9004"
     networks:
       - laravel
     depends_on:

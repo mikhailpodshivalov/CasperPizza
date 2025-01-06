@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('phone');
             $table->decimal('totalPrice', 10, 2);
             $table->text('address');
+            $table->text('comment')->nullable();
             $table->timestamps();
         });
     }

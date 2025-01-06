@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -22,7 +23,9 @@ Route::prefix('admin')->group(function () {
     Route::resource('orders', OrderController::class)->only(['index', 'show']);
 });
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::post('/orders', [OrderController::class, 'store'])->name('orders.store');
+
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/storage/{path}', function ($path) {
     return response()->file(storage_path('app/public/' . $path));
 })->name('storage');

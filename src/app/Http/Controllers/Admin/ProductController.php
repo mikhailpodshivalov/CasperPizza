@@ -43,7 +43,7 @@ class ProductController extends Controller
             $product->sizes()->create($size);
         }
 
-        return redirect()->route('products.index')->with('success', 'Продукт добавлен!');
+        return redirect()->route('products.index')->with('success', 'Proizvod je dodat!');
     }
 
 
@@ -82,12 +82,12 @@ class ProductController extends Controller
             $sizeModel->update($size);
         }
 
-        return redirect()->route('products.index')->with('success', 'Продукт обновлён!');
+        return redirect()->route('products.index')->with('success', 'Proizvod je ažuriran!');
     }
 
     public function destroy(Product $product)
     {
         $product->delete();
-        return redirect()->route('products.index')->with('success', 'Продукт удалён!');
+        return redirect()->route('products.index')->with('success', 'Proizvod uklonjen!');
     }
 }
