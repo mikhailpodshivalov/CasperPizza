@@ -135,6 +135,7 @@
 <script>
 import { Inertia } from '@inertiajs/inertia';
 import Modal from '@/Components/Modal.vue'; // путь к вашему компоненту модалки
+import axios from 'axios';
 
 export default {
     components: {
@@ -188,7 +189,6 @@ export default {
             this.emailError = null;
             this.phoneError = null;
             this.addressError = null;
-
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(this.email)) {
                 this.emailError = 'Molimo unesite validnu email adresu.';
@@ -202,7 +202,6 @@ export default {
             if (this.emailError || this.phoneError || this.addressError) {
                 return;
             }
-
             const orderData = {
                 items: this.cart,
                 email: this.email,
@@ -211,25 +210,20 @@ export default {
                 comment: this.comment || '',
             };
 
-            Inertia.post('/orders', orderData, {
-                onSuccess: () => {
-                    // Вместо alert
-                    this.showMyModal(
-                        'Uspeh',
-                        'Vaša porudžbina je uspešno poslata!'
-                    );
-                    this.cart = [];
-                    this.saveCart();
-                },
-                onError: (errors) => {
-                    // Вместо alert
-                    console.error('Greška pri slanju porudžbine:', errors);
-                    this.showMyModal(
-                        'Greška',
-                        'Došlo je do greške pri slanju porudžbine. Molimo pokušajte ponovo.'
-                    );
-                },
-            });
+            try {
+                const response = await axios.post('/orders', orderData);
+
+                this.showMyModal('Uspeh', response.data.message);
+                this.cart = [];
+                this.saveCart();
+
+            } catch (error) {
+                console.error('Greška pri slanju porudžbine:', error);
+                this.showMyModal(
+                    'Greška',
+                    'Došlo je do greške pri slanju porudžbine. Molimo pokušajte ponovo.'
+                );
+            }
         },
     },
     mounted() {

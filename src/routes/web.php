@@ -14,7 +14,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->middleware('auth')->group(function () {
     Route::get('/', function () {
         return view('admin.dashboard'); // Главная страница админки
     })->name('admin.dashboard');

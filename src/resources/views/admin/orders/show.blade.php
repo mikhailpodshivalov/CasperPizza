@@ -2,12 +2,14 @@
 
 @section('content')
     <div class="container">
-        <h1>Detalji porudžbine #{{ $order->id }}</h1>
+        <h1 class="text-lg"><strong>Detalji porudžbine #{{ $order->id }}</strong></h1>
         <p><strong>Email:</strong> {{ $order->email }}</p>
         <p><strong>Telefon:</strong> {{ $order->phone }}</p>
         <p><strong>Adresa:</strong> {{ $order->address }}</p>
-        <p><strong>Ukupni troškovi:</strong> {{ $order->total_price }} RSD</p>
-        <h3>Proizvodi</h3>
+        <p><strong>Ukupni troškovi:</strong> {{ $order->totalPrice }} RSD</p>
+        <p><strong>Komentar:</strong> {{ $order->comment }}</p>
+        <br>
+        <h3 class="text-lg">Proizvodi</h3>
         <table class="table mt-3">
             <thead>
             <tr>

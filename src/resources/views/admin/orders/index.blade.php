@@ -22,7 +22,7 @@
                     <td>{{ $order->email }}</td>
                     <td>{{ $order->phone }}</td>
                     <td>{{ $order->address }}</td>
-                    <td>{{ $order->total_price }} RSD</td>
+                    <td>{{ $order->totalPrice }} RSD</td>
                     <td>{{ $order->created_at }}</td>
                     <td>
                         <a href="{{ route('orders.show', $order) }}" class="btn btn-info">Pregled</a>
@@ -31,6 +31,10 @@
             @endforeach
             </tbody>
         </table>
+        <!-- Отображение пагинации -->
+        <div>
+            {{ $orders->links() }}
+        </div>
     </div>
 @endsection
 

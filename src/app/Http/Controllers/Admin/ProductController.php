@@ -31,14 +31,12 @@ class ProductController extends Controller
             'sizes.*.price' => 'required|numeric|min:0',
         ]);
 
-        // Обработка изображения
         if ($request->hasFile('image')) {
             $validated['image'] = $request->file('image')->store('images', 'public');
         }
 
         $product = Product::create($validated);
 
-        // Сохранение размеров
         foreach ($validated['sizes'] as $size) {
             $product->sizes()->create($size);
         }
@@ -64,9 +62,7 @@ class ProductController extends Controller
 
         $product = Product::findOrFail($id);
 
-        // Обработка изображения
         if ($request->hasFile('image')) {
-            // Удалить старое изображение
             if ($product->image) {
                 Storage::delete('public/' . $product->image);
             }
@@ -76,7 +72,6 @@ class ProductController extends Controller
 
         $product->update($validated);
 
-        // Обновление размеров
         foreach ($validated['sizes'] as $size) {
             $sizeModel = ProductSize::find($size['id']);
             $sizeModel->update($size);

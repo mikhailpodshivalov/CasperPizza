@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   app:
     build:
@@ -44,6 +42,15 @@ services:
       - db_data:/var/lib/mysql
     ports:
       - "3308:3306"
+    networks:
+      - laravel
+
+  mailhog:
+    image: mailhog/mailhog:latest
+    container_name: mailhog
+    ports:
+      - "8003:1025"
+      - "8100:8025"
     networks:
       - laravel
 
